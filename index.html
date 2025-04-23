@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Water Reminder</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#d0e8f2" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #d0e8f2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #0a4c75;
+      font-size: 2em;
+    }
+    p {
+      font-size: 1.2em;
+      color: #145374;
+    }
+  </style>
+</head>
+<body>
+  <h1>💧 Water Reminder</h1>
+  <p>You’ll get a notification every 10 seconds to drink water (demo).</p>
+
+  <script>
+    function notify() {
+      if (Notification.permission === "granted") {
+        new Notification("💧 Time to drink water!", {
+          body: "Hi Akshay, now you need to drink water",
+          icon: "icon.png"
+        });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js").then(() => {
+          console.log("Service Worker registered");
+        });
+      }
+
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(permission => {
+          if (permission === "granted") {
+            notify();
+            setInterval(notify, 10 * 1000);
+          }
+        });
+      } else {
+        notify();
+        setInterval(notify, 10 * 1000);
+      }
+    });
+  </script>
+</body>
+</html>
